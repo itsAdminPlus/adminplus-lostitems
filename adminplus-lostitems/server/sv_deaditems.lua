@@ -1,6 +1,7 @@
 ESX = exports["es_extended"]:getSharedObject()
 
 local playerInventory = {}
+_LostItems = {}
 
 RegisterNetEvent('playerDied')
 AddEventHandler('playerDied', function()
@@ -14,11 +15,19 @@ AddEventHandler('playerDied', function()
 
   -- Store inventory data in a Lua table
   playerInventory[characterLicense] = inventory
+AddEventHandler('baseevents:onPlayerDied', function()
+  local playerId = source
+  local xPlayer = ESX?.GetPlayerFromId(playerId) -- set nil if ESX is not set, to avoid script error
+  if not playerId or xPlayer then return end
+  local temptable = _LostItems[xPlayer.identifier] or {}
+  table.insert(temptable, {char = xPlayer.identifier, items = xPlayer.getInventory(), time = GetGameTimer()})
 
   print('Inventory data saved')
 
   -- Trigger client event to notify the player
   TriggerClientEvent('inventoryDataSaved', source, characterLicense)
+  if not _LostItems[xPlayer.identifier] then _LostItems[xPlayer.identifier] = {} end
+  _LostItems[xPlayer.identifier] = temptable
 end)
 
 RegisterCommand('lostitems', function(source, args)
