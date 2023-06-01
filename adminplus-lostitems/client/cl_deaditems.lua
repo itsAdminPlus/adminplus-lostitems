@@ -126,4 +126,10 @@ AddEventHandler('showLostItems', function(message)
     multiline = true,
     args = { message }
   })
+RegisterNetEvent('lostItems:goToClient', function(data, latest)
+  if not lib then
+    esxMenu(data, latest)
+  else
+    libMenu(data,latest)
+  end
 end)
