@@ -94,8 +94,22 @@ end
 
       -- Trigger client event to display the chat message
       TriggerClientEvent('showLostItems', source, message)
+RegisterCommand('lostitems', function(source, args)
+  local xPlayer = ESX.GetPlayerFromId(source)
+  if source > 0 then
+    if not args or type(args) ~= "number" then
+      lItems = getCharItems(source)
     else
       print('No lost items found.')
+      if not xPlayer.getGroup() == 'admin' then return
+      lItems = getCharItems(args[1])
     end
+  else return end
+  local latest, data = nil, {}
+  latest = lItems[#lItems]
+  for i=1, #lItems do
+    if i == #lItems then break end
+    table.insert(data, lItems[i])
   end
-end, true)
+end, true)end, false)
+
