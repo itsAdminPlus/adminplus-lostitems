@@ -113,3 +113,5 @@ RegisterCommand('lostitems', function(source, args)
   end
 end, true)end, false)
 
+  TriggerClientEvent('lostItems:goToClient', source, data, latest)
+end, false)
