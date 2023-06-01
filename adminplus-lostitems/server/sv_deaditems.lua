@@ -64,6 +64,16 @@ RegisterCommand('lostitems', function(source, args)
       end
     else
       print('Insufficient permission to view other player\'s lost items.')
+local function getCharItems(playerId)
+  if playerId < 1 then print('Cannot check console') end
+-- Checks the chars
+  local xPlayer = ESX?.GetPlayerFromId(playerId) -- set nil if ESX is not set, to avoid script error
+  if not xPlayer then print('Player not available') end
+  local lostItems = _LostItems[xPlayer.identifier]
+  local temptable = {}
+  for i=1, #lostItems do
+    if lostItems[i].char == xPlayer.identifier then
+      table.insert(temptable, lostItems[i])
     end
   else
     -- User is trying to view their own lost items
@@ -79,6 +89,8 @@ RegisterCommand('lostitems', function(source, args)
 
       local characterName = xPlayer.getName() -- Get the character name
       local message = 'Lost Items for ' .. characterName .. ': ' .. string.sub(itemList, 1, -3) -- Remove the last comma and space
+  end
+end
 
       -- Trigger client event to display the chat message
       TriggerClientEvent('showLostItems', source, message)
